@@ -90,11 +90,67 @@ The 'shape' of the tensor gives the size of the matrix it would represent. For e
     tensorC: Shape [2 2]
   
 ### Chaning Shape
-Similar to NumPy, given an initial array of values, you can change the shape of the array given all of the elements fit into uniform rows and columns. For example, a tensor of rank 2 and shape [4 2] has a total of 8 elements so it would not fit into a tensor of shape [3 3] since the new tensor would need 9 elements.
+Similar to NumPy, given an initial array of values, you can change the shape of the array given all of the elements fit into uniform rows and columns. For example, a tensor of rank 2 and shape [4 2] has a total of 8 elements so it would not fit into a tensor of shape [3 3] since the new tensor would need 9 elements. In the example below, we start with an array which has a total of 24 elements (shape: [4 2 3]) and then reshape the tensor in different ways. In the third example there is a -1 in place of where a typical number should be. The negative one tells the program to find the number that should fix there given one can exist. In the example we are asking for the program to find an array size 3 by something which will hold the same 24 elements. Since 3x8=24, then the program will create a tensor of shape [3 8].
 
+    tensorD1 = tf.ones([4,2,3])  # 4x2x3 = 24
+    tensorD2 = tf.reshape(tensorD1,[2,2,6])  # 2x2x6 = 24
+    tensorD3 = tf.reshape(tensorD2, [3,-1]) # the -1 tells the program to just find the correct shape
+    
+    # prints the vectors
+    print(tensorD1)
+    print(tensorD2)
+    print(tensorD3) 
+    
+    tf.Tensor(
+    [[[1. 1. 1.]
+      [1. 1. 1.]]
+
+     [[1. 1. 1.]
+      [1. 1. 1.]]
+
+     [[1. 1. 1.]
+      [1. 1. 1.]]
+
+     [[1. 1. 1.]
+      [1. 1. 1.]]], shape=(4, 2, 3), dtype=float32)
+    tf.Tensor(
+    [[[1. 1. 1. 1. 1. 1.]
+      [1. 1. 1. 1. 1. 1.]]
+
+     [[1. 1. 1. 1. 1. 1.]
+      [1. 1. 1. 1. 1. 1.]]], shape=(2, 2, 6), dtype=float32)
+    tf.Tensor(
+    [[1. 1. 1. 1. 1. 1. 1. 1.]
+     [1. 1. 1. 1. 1. 1. 1. 1.]
+     [1. 1. 1. 1. 1. 1. 1. 1.]], shape=(3, 8), dtype=float32)
+     
 ### Slicing Tensors
+No notes?
 
 ### Types of Tensors
+With the exception of variable, all of the tensors below are immutable (the value cannot change).
+
+#### Variable
+
+
+#### Constant
+
+
+#### Placeholder
+
+
+#### SparseTensor
+
+
+
+
+### Evaluating Tensors
+To evaluate a tensor, you need to create a session. The default code for this is very similar to the code for opening a file and reading information form it.
+
+    with tf.Session() as sess: # creates a session using the default graph
+        my_tensor.eval()       # my_tensor will be the name of the tensor
+
+
 
 # Core Learning Algorithms
 
