@@ -154,6 +154,26 @@ To evaluate a tensor, you need to create a session. The default code for this is
 
 # Core Learning Algorithms
 
+## Linear Regression
+
+### Preparing the data
+Before running any sort of machine learning code, you need to tell the program about the type of data it will be seeing. In the example in the video (the same as the example from the tensorflow website), we are working with data about the passengers aboard the Titanic. The code below loads the dataset using pandas and then removes the 'survived' column since this is what we are trying to predict.
+
+    # Load dataset.
+    dftrain = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/train.csv') # training data
+    dfeval = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/eval.csv') # testing data
+    y_train = dftrain.pop('survived')
+    y_eval = dfeval.pop('survived')
+
+In the example, there are two types of data
+
+
+## Classification
+
+## Clustering
+
+## Hidden Markov Models
+
 # Neural Networks with TensorFlow
 
 # Deep Computer Vision
