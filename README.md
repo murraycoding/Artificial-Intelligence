@@ -58,15 +58,39 @@ To create a tensor, you can use the following commands. These are all scalar vec
   floating = tf.Variable(3.567, tf.float64)
 
 ### Rank/Degree of Tensors
-The rank of the each tensor describes the dimensions of the vector. A scalar vector has rank 0 since it is not even part of a list. See below for each type of rank
+The rank of the each tensor describes the dimensions of the vector. A scalar vector has rank 0 since it is not even part of a list. See below for each type of rank of each of the tensors. Another way to think of the rank is the amount of nested levels there are in the list (which defines the tensor). In 'rank2_tensor' there is a list within another list (2 levels) so it is considered rank 2.
 
-  rank0_tensor = tf.Variable("Brian", tf.string)
-  rank1_tensor = tf.Variable(["Brian"], tf.string)
-  rank2_tensor = tf.Variable([["example","text"],["machine","learning"]], tf.string) 
+  tensorA = tf.Variable("Brian", tf.string)
+  tensorB = tf.Variable(["Brian"], tf.string)
+  tensorC = tf.Variable([["Brian","Taylor"],["Murray","Murray"]], tf.string)
+  
+To determine the rank of the tensor, you can use the command tf.rank. The examples below print the rank of the above tensors.
+
+  # print out the rank of each tensor
+  print(f'tensorA: Rank {tf.rank(tensorA)}')
+  print(f'tensorB: Rank {tf.rank(tensorB)}')
+  print(f'tensorC: Rank {tf.rank(tensorC)}')
+  
+  # Output
+  tensorA: Rank 0
+  tensorB: Rank 1
+  tensorC: Rank 2
 
 ### Shape of Tensors
+The 'shape' of the tensor gives the size of the matrix it would represent. For example, a rank 2 vector with 2 values in each list is just a 2x2 matrix so the shape would be [2,2]. The examples below gives the shape of each tensor defined above.
 
+  # finds the shape of each of the tensors
+  print(f'tensorA: Shape {tf.shape(tensorA)}')
+  print(f'tensorB: Shape {tf.shape(tensorB)}')
+  print(f'tensorC: Shape {tf.shape(tensorC)}')
+  
+  # Output
+  tensorA: Shape []
+  tensorB: Shape [1]
+  tensorC: Shape [2 2]
+  
 ### Chaning Shape
+Similar to NumPy, given an initial array of values, you can change the shape of the array given all of the elements fit into uniform rows and columns. For example, a tensor of rank 2 and shape [4 2] has a total of 8 elements so it would not fit into a tensor of shape [3 3] since the new tensor would need 9 elements.
 
 ### Slicing Tensors
 
