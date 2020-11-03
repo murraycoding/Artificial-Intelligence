@@ -190,6 +190,33 @@ How many times the model will see the same model. The first time the model sees 
 ### Input function
 An input function defines how the data will be broken into batches (pieces of data to feed to the function) and epochs (the number of times the model will see the data). In Tensorflow, the model needs to be given the data in a very specific type of object built into TensorFlow, the 'tf.data.DataSet' object. The input function will take the data from a pandas dataframe and convert it into the DataSet object in order to give it to the model.
 
+The code for the input function is rather complicated but it really comes down to a function creating the input functions. This is coded this way to allow for a function to produce a separate function for the training data and another function for the evaluation data.
+
+    (1)  def make_input_fn(data_df, label_df, num_epochs=10, shuffle=True, batch_size=32):
+    (2)      def input_function():  # inner function, this will be returned
+    (3)          ds = tf.data.Dataset.from_tensor_slices((dict(data_df), label_df))  # create tf.data.Dataset object with data and its label
+    (4)          if shuffle:
+    (5)              ds = ds.shuffle(1000)  # randomize order of data
+    (6)          ds = ds.batch(batch_size).repeat(num_epochs)  # split dataset into batches of 32 and repeat process for number of epochs
+    (7)          return ds  # return a batch of the dataset
+    (8)      return input_function  # return a function object for use
+
+    (9)  train_input_fn = make_input_fn(dftrain, y_train)  # here we will call the input_function that was returned to us to get a dataset object we can feed to the model
+    (10) eval_input_fn = make_input_fn(dfeval, y_eval, num_epochs=1, shuffle=False)
+
+Here is a line by line breakdown of the code below:
+Line (1) is the outer function which will return the different input functions. There are two required parameters the data (features) and the label data (the correct results of what the model is trying to predict. The reason only the data is required and not the other values is because by default, you would want to train the data with around 10 epochs (you can always play with this number to tweak the model later) and you should always shuffle the data before starting the next epoch. 
+Line (2) is the definition of the input function, this function has no parameters since all of the needed parameters are defined in the outer function definition. 
+Line (3) This is the tensorflow method to take the data in the form of pandas dataframes and convert it to a Dataset object needed for the model. The dict() method is to cover the multi-column data to a dictionary.
+Line (4) Only executes the code if shuffle is set to True (which is set by default)
+Line (5) redefines the data set as a shuffled version of the dataset.
+Line (6) The dataset is split into "batches" and repeats for the number of "epochs"
+Line (7) The return statement for the innner function to return the dataset.
+Line (8) The return statement for the outer function which will return the input function with all of the correct settings
+Line (9) Defines the training input function as a generic input function with the training data and the predictions
+Line (10) Defines the evaluation input function with the evaluation data and specifically sets the number of epochs to 1 and the shuffle to false since this the evaluation data and not the training data.
+
+
 ## Classification
 
 ## Clustering
