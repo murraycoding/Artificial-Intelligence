@@ -165,8 +165,30 @@ Before running any sort of machine learning code, you need to tell the program a
     y_train = dftrain.pop('survived')
     y_eval = dfeval.pop('survived')
 
-In the example, there are two types of data
+In the example, there are two types of data. numerical data and categorical data. In the next lines of code, the names of the categorical data values are given and all possible values of each feature are put into a list. By giving the computer a list of all of the possible values, the library will automatically convert all of the categorical data into numberic data for the program to calculate predictions with. 
 
+    CATEGORICAL_COLUMNS = ['sex', 'n_siblings_spouses', 'parch', 'class', 'deck',
+                           'embark_town', 'alone']
+    NUMERIC_COLUMNS = ['age', 'fare']
+
+    feature_columns = []
+    for feature_name in CATEGORICAL_COLUMNS:
+      vocabulary = dftrain[feature_name].unique()  # gets a list of all unique values from given feature column
+      feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(feature_name, vocabulary))
+
+    for feature_name in NUMERIC_COLUMNS:
+      feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
+
+    print(feature_columns)
+    
+### Feeding the model
+The next step in the process is to feed the training data to the model. Often times in machine learning there will be potentially millions of training data points to feed a model with. Due to this large amount of data, the model needs to be given information in batches. The best case scenario for loading data is to load about 32 data points at a time. If you were to load 1 piece of data at a time, it would take too long and be too inefficient. If you load too much, then the memory of the computer would become too full and overload. 
+
+### Epochs
+How many times the model will see the same model. The first time the model sees the data. It will produce a result which will be relatively inaccurately. The next time the data is given to the model, the data will be given in a different order. Seeing the same data in different ways (or orders) make it easier for the model to pick up on patterns. An Epoch is just one stream of the entire dataset. While it is good for the model to see the data multiple times, there is such a thing as overfitting. Overfitting is where the model becomes too relient on the dataset and essentially memorizes the dataset. The goal of all machine learning is to train the computer to take in new data values and do something with that. Having a model which is too relient on specific data can lead to innacuurate predictions on any future data.
+
+### Input function
+An input function defines how the data will be broken into batches (pieces of data to feed to the function) and epochs (the number of times the model will see the data). In Tensorflow, the model needs to be given the data in a very specific type of object built into TensorFlow, the 'tf.data.DataSet' object. The input function will take the data from a pandas dataframe and convert it into the DataSet object in order to give it to the model.
 
 ## Classification
 
