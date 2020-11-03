@@ -15,7 +15,7 @@ This is a further subset of machine learning which uses a layered representation
 
 Multi-stage information extraction?? This is the name of the differeny computation layers.
 
-## Machine LEarning Terminology
+## Machine Learning Terminology
 
 ### Features / Labels
 Features are the information given to the machine learning model. The label is the information we are trying to predict. When training the model, we also need to give the model the correct label compared to the predicted label. When using the completed model, you only have the features and you are trying to correctly predict the label.
@@ -204,19 +204,55 @@ The code for the input function is rather complicated but it really comes down t
     (9)  train_input_fn = make_input_fn(dftrain, y_train)  # here we will call the input_function that was returned to us to get a dataset object we can feed to the model
     (10) eval_input_fn = make_input_fn(dfeval, y_eval, num_epochs=1, shuffle=False)
 
-Here is a line by line breakdown of the code below:
-Line (1) is the outer function which will return the different input functions. There are two required parameters the data (features) and the label data (the correct results of what the model is trying to predict. The reason only the data is required and not the other values is because by default, you would want to train the data with around 10 epochs (you can always play with this number to tweak the model later) and you should always shuffle the data before starting the next epoch. 
-Line (2) is the definition of the input function, this function has no parameters since all of the needed parameters are defined in the outer function definition. 
-Line (3) This is the tensorflow method to take the data in the form of pandas dataframes and convert it to a Dataset object needed for the model. The dict() method is to cover the multi-column data to a dictionary.
-Line (4) Only executes the code if shuffle is set to True (which is set by default)
-Line (5) redefines the data set as a shuffled version of the dataset.
-Line (6) The dataset is split into "batches" and repeats for the number of "epochs"
-Line (7) The return statement for the innner function to return the dataset.
-Line (8) The return statement for the outer function which will return the input function with all of the correct settings
-Line (9) Defines the training input function as a generic input function with the training data and the predictions
-Line (10) Defines the evaluation input function with the evaluation data and specifically sets the number of epochs to 1 and the shuffle to false since this the evaluation data and not the training data.
+Here is a line by line breakdown of the code below:    
+Line (1) is the outer function which will return the different input functions. There are two required parameters the data (features) and the label data (the correct results of what the model is trying to predict. The reason only the data is required and not the other values is because by default, you would want to train the data with around 10 epochs (you can always play with this number to tweak the model later) and you should always shuffle the data before starting the next epoch.    
+Line (2) is the definition of the input function, this function has no parameters since all of the needed parameters are defined in the outer function definition.    
+Line (3) This is the tensorflow method to take the data in the form of pandas dataframes and convert it to a Dataset object needed for the model. The dict() method is to cover the multi-column data to a dictionary.    
+Line (4) Only executes the code if shuffle is set to True (which is set by default)    
+Line (5) redefines the data set as a shuffled version of the dataset.    
+Line (6) The dataset is split into "batches" and repeats for the number of "epochs"    
+Line (7) The return statement for the innner function to return the dataset.      
+Line (8) The return statement for the outer function which will return the input function with all of the correct settings.     
+Line (9) Defines the training input function as a generic input function with the training data and the predictions.    
+Line (10) Defines the evaluation input function with the evaluation data and specifically sets the number of epochs to 1 and the shuffle to false since this the evaluation data and not the training data.     
 
+In order to use this model, we need to run the function to create an initial training model. Once this step is complete, we can use the training model to make predictions on sets of data. It is worth noting that machine learning models are not erally that good on predicting data on any one particular case. It is much better at, on average, making predictions on a larger data set. For example, it may be wrong in a few cases but on a larger dataset, it will make accurate predictions 83% of the time. The example from the tensorflow website aims to predict if someone on the titanic survived or not. How the model predicts this is gives a probability for each person to have a 1 (meaning they survived) or a 0 (meaning they did not survive). 
 
+    linear_est = tf.estimator.LinearClassifier(feature_columns=feature_columns)
+    
+The code above creates the linear_est (linear estimation model based on the feature columns. These were the lists all possible values for all of the features. For example for the 'sex' feature, all of the possible values are 'male' and 'female'. However, since this is categorical data, the library will have already converted this data to a numerical value for the model to make calculations with.
+
+    linear_est.train(train_input_fn)  # train
+    
+The code above is what actually "trains" the mode. Keep in mind that the training input function is written to take the data and produce the most accurate model used to predict future datapoints. Now that the model has been trained, it is time to make some predictions with it. 
+
+    result = linear_est.evaluate(eval_input_fn)
+    
+This is the result from the training model. It is importatnt to know that this code can only be run after the linear model has been trained. The result is a dictionary with several different keys we can read to determine the model's effectiveness.
+
+    clear_output()  # clears console output
+    print(result['accuracy'])  # the result variable is simply a dict of stats about our model
+    
+The code above will clear the output of the console (there will be some output of the function when the model is being trained and when the result is being calculated). After, the code will print the 'accuracy' key of the result dictionary. In the example video, the model had a 73% accuracy.
+
+Now that we have a model with a fairly good accuracy, we can use it to make predictions. The code below will turn the results of the prediction method to a list so we can loop through it and access specific people.
+
+    predict_list = list(linear_est.predict(eval_input_fn))
+    
+This line of code takes the lihear_est model and uses the predict method to make predictions on the evaluation data (which comes from the eval_input_fn). From here we can look at a few things to see how accurate the model was for any specific person. Just one prediction is represpented by a dictionary of several different values. Therefore, the list will be a list of different dictionaries.
+
+    print(f'Chance of not surviving: {predict_list[0]['probabilities'][0]}) # the probability of a person not surviving
+    print(f'Chance of surviving: {predict_list[0]['probabilities'][1]}) # the probability of a person surviving
+    
+The code above is the chance of the first person off of the list (since we are looking at index 0) either surviving or not surviving. To loop through the different values, you can create a loop to show the code above for each of the values in the and the actual values from the data to see if the model was accurate.
+
+    for index, value in ennumerate(y_eval):
+        print(f'Actual survival: {y_eval.loc[index]}')
+        print(f'Chance of not surviving: {predict_list[index]['probabilities'][0]}) # the probability of a person not surviving
+        print(f'Chance of surviving: {predict_list[index]['probabilities'][1]}) # the probability of a person surviving
+
+That's it for linear regression.
+    
 ## Classification
 
 ## Clustering
