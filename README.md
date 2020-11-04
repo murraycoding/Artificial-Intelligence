@@ -257,6 +257,14 @@ That's it for linear regression.
 
 ## Clustering
 
+Clustering is an unsupervised machine learning algorithm which is designed to take lots of input data with no labels or expected outcome. The algorithm in this case is known as the k-means clustering algorith. The process for this algorithm is as follows:
+
+- Pick *k* random centroids on the scatter plot of the data.
+- Each data point in the set is assigned to a centroid by determining which centroid is the closest to the point
+- Find the new centroids by averaging all of the points under each centroid
+- Reassign each of the points to the closest centroid.
+- repeat the last 2 steps until no points change centroids
+
 ## Hidden Markov Models
 
 # Neural Networks with TensorFlow
